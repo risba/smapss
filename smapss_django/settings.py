@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'hello_world',
+    'projects'
     
 ]
 
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'smapss_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ["smapss_django/templates/"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
