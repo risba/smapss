@@ -14,7 +14,7 @@ def register_request(request):
 			user = form.save()
 			login(request, user)
 			messages.success(request, "Registration successful." )
-			return redirect("main:homepage")
+			return redirect("scoreboard")
 		messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm()
 	return render (request=request, template_name="register.html", context={"register_form":form})
@@ -29,10 +29,15 @@ def login_request(request):
 			if user is not None:
 				login(request, user)
 				messages.info(request, f"You are now logged in as {username}.")
-				return redirect("main:homepage")
+				return redirect("scoreboard")
 			else:
 				messages.error(request,"Invalid username or password.")
 		else:
 			messages.error(request,"Invalid username or password.")
 	form = AuthenticationForm()
 	return render(request=request, template_name="login.html", context={"login_form":form})
+
+
+
+def scoreboard_request(request):
+    return render(request, 'scoreboard.html')

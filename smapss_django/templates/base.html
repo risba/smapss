@@ -1,1 +1,8 @@
-{% block page_content %}{% endblock %}
+{% block page_content %}
+
+{% endblock %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+{% endif %}
