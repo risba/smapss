@@ -37,7 +37,7 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-
+.env
 smapss_venv
 *.sqlite3
 __pycache__
