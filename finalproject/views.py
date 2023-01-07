@@ -2,6 +2,8 @@
 from projects.models import Project
 from django.shortcuts import  render, redirect
 from .forms import NewUserForm
+from .models import Profile
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm 
@@ -12,6 +14,8 @@ def register_request(request):
 		form = NewUserForm(request.POST)
 		if form.is_valid():
 			user = form.save()
+			profile = Profile(profile_name = user.username, score = 100)
+			profile.save()
 			login(request, user)
 			messages.success(request, "Registration successful." )
 			return redirect("scoreboard")
@@ -26,6 +30,7 @@ def login_request(request):
 			username = form.cleaned_data.get('username')
 			password = form.cleaned_data.get('password')
 			user = authenticate(username=username, password=password)
+			profile = Profile.objects.get(profile_name = user.username)
 			if user is not None:
 				login(request, user)
 				messages.info(request, f"You are now logged in as {username}.")
@@ -35,9 +40,15 @@ def login_request(request):
 		else:
 			messages.error(request,"Invalid username or password.")
 	form = AuthenticationForm()
+
 	return render(request=request, template_name="login.html", context={"login_form":form})
 
 
+def scoreboard_request(request,):
+	profile = Profile.objects.get(profile_name = request.user.username)
+	context = {'profile': profile}
+	return render(request, 'scoreboard.html', context)
 
-def scoreboard_request(request):
-    return render(request, 'scoreboard.html')
+
+
+	
