@@ -7,4 +7,5 @@ urlpatterns = [
     path("", views.login_request, name="login"),
     path("scoreboard", views.scoreboard_request, name="scoreboard"),
     path("userprofile", views.userprofile_request, name="userprofile"),
+    path("shareprediction", views.shareprediction_request, name="shareprediction"),
 ]

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SMAPSS Share Prediction</title>
+</head>
+<body>
+  <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light">
+    <div class="container">
+    <a
+      href="#"
+      class="navbar-brand mb-0 h1">
+      SMAPSS
+    </a>
+    <button
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#navbarNav"
+    class="navbar-toggler"
+    aria-controls="navbarNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+    >
+    
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+        
+    <div
+      class="collapse navbar-collapse"
+      id="navbarNav"
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a href="/userprofile" class="nav-link active">
+            user profile
+          </a>
+        </li>
+        
+        <li class="nav-item active">
+          <a href="/scoreboard" class="nav-link active">
+            scoreboard
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="/shareprediction" class="nav-link active">
+            Share Prediction
+          </a>
+        </li>
+      </ul>
+  <form>
+    <label for="dropdown">Select an stock:</label><br>
+    <select id="dropdown">
+      {% for stock in stock_list %}
+        <option value="{{ stock }}">{{ stock }}</option>
+      {% endfor %}
+    </select><br>
+    <label for="buy-price">Buy Price:</label><br>
+    <input type="text" id="buy-price"><br>
+    <label for="sell-price">Sell Price:</label><br>
+    <input type="text" id="sell-price"><br>
+    <label for="money-amount">Money to invest:</label><br>
+    <input type="text" id="money-amount"><br>
+    <button type="submit" value="shareprediction">Share Prediction</button>
+  </form> 
+</body>
+</html>

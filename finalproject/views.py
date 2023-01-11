@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm 
+import pandas as pd
+from .config import DB_ENGINE
 
 
 def register_request(request):
@@ -49,3 +51,11 @@ def scoreboard_request(request,):
 
 def userprofile_request(request,):
 	return render(request, 'userprofile.html')
+
+def shareprediction_request(request,):
+	stock_df = pd.read_sql('select distinct stock_name from stock_prices', DB_ENGINE)
+	stock_list = stock_df['stock_name'].to_list()
+	context = {
+		'stock_list' : stock_list,
+	}
+	return render(request, 'share_prediction.html', context)
