@@ -4,12 +4,12 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>SMAPSS Share Prediction</title>
+		<title>SMAPSS User Profile</title>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 	</head>
 	
-	<body>
+	<body>			
 		<div class="container">
 			<nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark">
 				<a class="navbar-brand" href="/user_profile">SMAPSS</a>
@@ -20,15 +20,15 @@
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item active">
-							<a class="nav-link" href="/user_profile">User Profile</a>
+							<a class="nav-link" href="/user_profile">User Profile <span class="sr-only"><br>(current)</span></a>
 						</li>
 						
 						<li class="nav-item active">
-							<a class="nav-link" href="/scoreboard">Scoreboard <span class="sr-only"><br>(current)</span></a>
+							<a class="nav-link" href="/scoreboard">Scoreboard</a>
 						</li>
 						
 						<li class="nav-item active">
-							<a class="nav-link" href="/share_prediction">Share Prediction <span class="sr-only"><br>(current)</span></a>
+							<a class="nav-link" href="/share_prediction">Share Prediction</a>
 						</li>
 					</ul>
 				</div>
@@ -42,22 +42,5 @@
 				</div>
 			</nav>
 		</div>
-		
-		<form>
-			<label for="dropdown">Select an stock:</label><br>
-			<select id="dropdown">
-				{% for stock in stock_list %}
-				<option value="{{ stock }}">{{ stock }}</option>
-				{% endfor %}
-			</select><br>
-		
-			<label for="buy-price">Buy Price:</label><br>
-			<input type="text" id="buy-price"><br>
-			<label for="sell-price">Sell Price:</label><br>
-			<input type="text" id="sell-price"><br>
-			<label for="money-amount">Money to invest:</label><br>
-			<input type="text" id="money-amount"><br>
-			<button type="submit" value="shareprediction">Share Prediction</button>
-		</form> 
 	</body>
 </html>

@@ -20,7 +20,7 @@ def register_request(request):
 			profile.save()
 			login(request, user)
 			#messages.success(request, "Registration successful.")
-			return redirect("userprofile")
+			return redirect("user_profile")
 		messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm()
 	return render (request=request, template_name="register.html", context={"register_form":form})
@@ -36,7 +36,7 @@ def login_request(request):
 			if user is not None:
 				login(request, user)
 				#messages.info(request, f"You are now logged in as {username}.")
-				return redirect("userprofile")
+				return redirect("user_profile")
 			else:
 				messages.error(request,"Invalid username or password.")
 		else:
@@ -50,7 +50,7 @@ def scoreboard_request(request,):
 	return render(request, 'scoreboard.html', context)
 
 def userprofile_request(request,):
-	return render(request, 'userprofile.html')
+	return render(request, 'user_profile.html')
 
 def shareprediction_request(request,):
 	stock_df = pd.read_sql('select distinct stock_name from stock_prices', DB_ENGINE)

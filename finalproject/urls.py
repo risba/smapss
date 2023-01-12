@@ -6,6 +6,6 @@ urlpatterns = [
     path("login", views.login_request, name="login"),
     path("", views.login_request, name="login"),
     path("scoreboard", views.scoreboard_request, name="scoreboard"),
-    path("userprofile", views.userprofile_request, name="userprofile"),
-    path("shareprediction", views.shareprediction_request, name="shareprediction"),
+    path("user_profile", views.userprofile_request, name="user_profile"),
+    path("share_prediction", views.shareprediction_request, name="share_prediction"),
 ]
