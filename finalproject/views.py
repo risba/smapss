@@ -61,7 +61,8 @@ def userprofile_request(request,):
 	follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
 
 
-	predictions = Prediction.objects.get(user = request.user.username)
+	predictions = Prediction.objects.filter(user = request.user.username)
+	profile = Profile.objects.get(profile_name = request.user.username)
 
 	profile_info = {
 		"profile_name": profile.profile_name,
