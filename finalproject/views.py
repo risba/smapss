@@ -49,10 +49,23 @@ def login_request(request):
 def userprofile_request(request,):
 	profile = Profile.objects.get(profile_name = request.user.username)
 	#predictions
-	#followers
+	followed_query = "select * from follow_table where follower = '{follower}'"
+	followed_df = pd.read_sql(followed_query.format(follower = request.user.username), DB_ENGINE)
+	followed_df = followed_df.drop_duplicates(['follower', 'followed'], keep = 'last')
+	followed_list = followed_df[followed_df['isfollow']=="Follow"]["followed"].tolist()
+	followed_profiles = Profile.objects.filter(profile_name__in=followed_list)
+	print("LEN followed:", len(followed_profiles))
+
+	follower_query = "select * from follow_table where followed = '{followed}'"
+	follower_df = pd.read_sql(follower_query.format(followed = profile.profile_name), DB_ENGINE)
+	follower_df = follower_df.drop_duplicates(['follower', 'followed'], keep = 'last')
+	follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
+
 	profile_info = {
 		"profile_name": profile.profile_name,
 		"score": profile.score,
+		"followed_profiles": followed_profiles,
+		"follower_count":len(follower_list)
 	}
 	
 	return render(request, 'user_profile.html', context=profile_info)
@@ -87,10 +100,29 @@ def searchuser_request(request,):
 				follow_type = "Unfollow"
 			else:
 				follow_type = "Follow"
+
+
+			followed_query = "select * from follow_table where follower = '{follower}'"
+			followed_df = pd.read_sql(followed_query.format(follower = profile.profile_name), DB_ENGINE)
+			followed_df = followed_df.drop_duplicates(['follower', 'followed'], keep = 'last')
+			followed_list = followed_df[followed_df['isfollow']=="Follow"]["followed"].tolist()
+			followed_profiles = Profile.objects.filter(profile_name__in=followed_list)
+
+			follower_query = "select * from follow_table where followed = '{followed}'"
+			follower_df = pd.read_sql(follower_query.format(followed = profile.profile_name), DB_ENGINE)
+			follower_df = follower_df.drop_duplicates(['follower', 'followed'], keep = 'last')
+			follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
+	
+
+
 			user_info = {
 				"profile_name": profile.profile_name,
 				"score": profile.score,
-				"follow": follow_type}
+				"follow": follow_type,
+				"followed_profiles": followed_profiles,
+				"follower_count": len(follower_list)}
+
+
 			return render(request, 'other_profiles.html', context=user_info)
 		
 		elif page_type == "follow_page":
@@ -103,11 +135,25 @@ def searchuser_request(request,):
 			follow_db_df.to_sql('follow_table', DB_ENGINE, if_exists='append')
 			follow_type = last_operation
 
-			print("FOLLOW PAGE FOLLOW TYPE:" ,follow_type)
+
+			followed_query = "select * from follow_table where follower = '{follower}'"
+			followed_df = pd.read_sql(followed_query.format(follower = profile.profile_name), DB_ENGINE)
+			followed_df = followed_df.drop_duplicates(['follower', 'followed'], keep = 'last')
+			followed_list = followed_df[followed_df['isfollow']=="Follow"]["followed"].tolist()
+			followed_profiles = Profile.objects.filter(profile_name__in=followed_list)
+
+
+			follower_query = "select * from follow_table where followed = '{followed}'"
+			follower_df = pd.read_sql(follower_query.format(followed = profile.profile_name), DB_ENGINE)
+			follower_df = follower_df.drop_duplicates(['follower', 'followed'], keep = 'last')
+			follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
+
 			user_info = {
 			"profile_name": profile.profile_name,
 			"score": profile.score,
-			"follow": follow_type}
+			"follow": follow_type,
+			"followed_profiles": followed_profiles,
+			"follower_count": len(follower_list)}
 			print(follow_df)
 			return render(request, 'other_profiles.html', context=user_info)
 

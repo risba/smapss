@@ -89,7 +89,7 @@
 			  </div>
 			  <div>
 				<span class="label">Follower Count:</span>
-				<span>1000</span>
+				<span>{{follower_count}}</span>
 			  </div>
 		
 			  
@@ -120,18 +120,13 @@
 			  
 			  <h2>Followed Users</h2>
 			  <table>
+				{% for profile in followed_profiles %}
 				<tr>
-				  <th>Username</th>
-				  <th>Score</th>
-				</tr>
-				<tr>
-				  <td>JohnDoe</td>
-				  <td>87</td>
-				</tr>
-				<tr>
-				  <td>JaneDoe</td>
-				  <td>92</td>
-				</tr>
+					<td>{{profile.profile_name}}</td>
+					<td>{{profile.score}}</td>
+				  </tr>
+					
+				{% endfor %}
 			  </table>
 		</div>
 	</body>
