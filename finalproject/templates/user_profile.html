@@ -102,20 +102,16 @@
 				  <th>Buy Price</th>
 				  <th>Sell Price</th>
 				</tr>
+				{% for prediction in predictions %}
 				<tr>
-				  <td>01/01/2022</td>
-				  <td>AAPL</td>
-				  <td>$1000</td>
-				  <td>$100</td>
-				  <td>$120</td>
-				</tr>
-				<tr>
-				  <td>01/02/2022</td>
-				  <td>GOOG</td>
-				  <td>$500</td>
-				  <td>$150</td>
-				  <td>$180</td>
-				</tr>
+					<td>{{prediction.prediction_date}}</td>
+					<td>{{prediction.stock_name}}</td>
+					<td>{{prediction.money_amount}}</td>
+					<td>{{prediction.buy_price}}</td>
+					<td>{{prediction.sell_price}}</td>
+				  </tr>
+					
+				{% endfor %}
 			  </table>
 			  
 			  <h2>Followed Users</h2>

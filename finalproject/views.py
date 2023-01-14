@@ -54,18 +54,21 @@ def userprofile_request(request,):
 	followed_df = followed_df.drop_duplicates(['follower', 'followed'], keep = 'last')
 	followed_list = followed_df[followed_df['isfollow']=="Follow"]["followed"].tolist()
 	followed_profiles = Profile.objects.filter(profile_name__in=followed_list)
-	print("LEN followed:", len(followed_profiles))
 
 	follower_query = "select * from follow_table where followed = '{followed}'"
 	follower_df = pd.read_sql(follower_query.format(followed = profile.profile_name), DB_ENGINE)
 	follower_df = follower_df.drop_duplicates(['follower', 'followed'], keep = 'last')
 	follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
 
+
+	predictions = Prediction.objects.get(user = request.user.username)
+
 	profile_info = {
 		"profile_name": profile.profile_name,
 		"score": profile.score,
 		"followed_profiles": followed_profiles,
-		"follower_count":len(follower_list)
+		"follower_count":len(follower_list),
+		"predictions": predictions
 	}
 	
 	return render(request, 'user_profile.html', context=profile_info)
@@ -114,13 +117,16 @@ def searchuser_request(request,):
 			follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
 	
 
+			predictions = Prediction.objects.get(user = profile.profile_name)
+
 
 			user_info = {
 				"profile_name": profile.profile_name,
 				"score": profile.score,
 				"follow": follow_type,
 				"followed_profiles": followed_profiles,
-				"follower_count": len(follower_list)}
+				"follower_count": len(follower_list),
+				"predictions": predictions}
 
 
 			return render(request, 'other_profiles.html', context=user_info)
@@ -148,12 +154,15 @@ def searchuser_request(request,):
 			follower_df = follower_df.drop_duplicates(['follower', 'followed'], keep = 'last')
 			follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
 
+			predictions = Prediction.objects.get(user = profile.profile_name)
+
 			user_info = {
 			"profile_name": profile.profile_name,
 			"score": profile.score,
 			"follow": follow_type,
 			"followed_profiles": followed_profiles,
-			"follower_count": len(follower_list)}
+			"follower_count": len(follower_list),
+			"predictions": predictions}
 			print(follow_df)
 			return render(request, 'other_profiles.html', context=user_info)
 
