@@ -45,8 +45,14 @@ def login_request(request):
 	return render(request=request, template_name="login.html", context={"login_form":form})
 
 def scoreboard_request(request,):
-	profile = Profile.objects.get(profile_name = request.user.username)
-	context = {'profile': profile}
+	user_profiles = Profile.objects.all()
+	profile_list = []
+	for user_profile in user_profiles:
+		profile_list.append([user_profile.profile_name, user_profile.score])
+	profile_list.sort(key = lambda x: x[1], reverse=True)
+	context = {'profiles': profile_list}
+	#profile = Profile.objects.get(profile_name = request.user.username)
+	#context = {'profile': profile}
 	return render(request, 'scoreboard.html', context)
 
 def userprofile_request(request,):
@@ -59,3 +65,5 @@ def shareprediction_request(request,):
 		'stock_list' : stock_list,
 	}
 	return render(request, 'share_prediction.html', context)
+
+

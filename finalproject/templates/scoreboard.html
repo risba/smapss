@@ -50,22 +50,20 @@
 					<th>Score</th>
 				</tr>
 				<tr>
-					<td>user1</td>
-					<td>100</td>
-				</tr>
-				<tr>
-					<td>user2</td>
-					<td>90</td>
-				</tr>
-				<tr>
-					<td>user3</td>
-					<td>80</td>
-				</tr>
-				<tr>
 					<td>{{profile.profile_name}}</td>
 					<td>{{profile.score}}</td>
+				</tr>
+        <tr>
+          {% for profile in profiles %}
+					<tr>
+            <td>{{profile.0}}</td>
+            <td>{{profile.1}}</td>
+          </tr>
+					{% endfor %}
 				</tr>
 			</table>
 		</div>
 	</body>
 </html>
+
+
