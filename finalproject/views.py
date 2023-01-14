@@ -118,7 +118,7 @@ def searchuser_request(request,):
 			follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
 	
 
-			predictions = Prediction.objects.get(user = profile.profile_name)
+			predictions = Prediction.objects.filter(user = profile.profile_name)
 
 
 			user_info = {
@@ -155,7 +155,7 @@ def searchuser_request(request,):
 			follower_df = follower_df.drop_duplicates(['follower', 'followed'], keep = 'last')
 			follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
 
-			predictions = Prediction.objects.get(user = profile.profile_name)
+			predictions = Prediction.objects.filter(user = profile.profile_name)
 
 			user_info = {
 			"profile_name": profile.profile_name,
