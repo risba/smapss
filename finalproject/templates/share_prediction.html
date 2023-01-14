@@ -52,22 +52,33 @@
 		</div>
 		
 		<div style = "position:relative; left:0px; top:80px">
-			<form>
-				<label for="dropdown">Select an stock:</label><br>
-				<select id="dropdown">
+			<form method="POST">
+        {% csrf_token %}
+				<label for="dropdown" name="dropdown">Select an stock:</label><br>
+				<select id="dropdown" name="selectitem">
 					{% for stock in stock_list %}
-					<option value="{{ stock }}">{{ stock }}</option>
+					<option name="stockoption" value="{{ stock }}">{{ stock }}</option>
 					{% endfor %}
 				</select><br>
 			
-				<label for="buy-price">Buy Price:</label><br>
-				<input type="text" id="buy-price"><br>
-				<label for="sell-price">Sell Price:</label><br>
-				<input type="text" id="sell-price"><br>
-				<label for="money-amount">Money to invest:</label><br>
-				<input type="text" id="money-amount"><br>
-				<button type="submit" value="shareprediction">Share Prediction</button>
+				<label for="buy-price-label">Buy Price:</label><br>
+				<input name="buy-price" type="float" id="buy-price"><br>
+				<label for="sell-price-label">Sell Price:</label><br>
+				<input name="sell-price" type="text" id="sell-price"><br>
+				<label for="money-amount-label">Money to invest:</label><br>
+				<input name="money-amount" type="text" id="money-amount"><br>
+				<button type="submit" value="shareprediction" id ="submitButton">Share Prediction</button>
 			</form> 
+     
 		</div>
+
+   
 	</body>
+
+  
 </html>
+
+
+
+
+

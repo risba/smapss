@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 import pandas as pd
+from .functions import calculate_score
 from .config import DB_ENGINE
 
 
@@ -62,11 +63,22 @@ def searchuser_request(request,):
 	return render(request, 'search_user.html')
 
 def shareprediction_request(request,):
+	
 	stock_df = pd.read_sql('select distinct stock_name from stock_prices', DB_ENGINE)
 	stock_list = stock_df['stock_name'].to_list()
 	context = {
 		'stock_list' : stock_list,
 	}
+	if request.method == "POST":
+		data=request.POST
+		prediction_info = {
+		"selected_stock": data.get("selectitem"),
+		"buy_price": data.get("buy-price"),
+		"sell_price": data.get("sell-price"),
+		"money_amount": data.get("money-amount"),
+		"profile" : Profile.objects.get(profile_name = request.user.username)}
+		calculate_score(prediction_info)
+		
 	return render(request, 'share_prediction.html', context)
 
 def sharefeedback_request(request,):
@@ -78,3 +90,5 @@ def sharefeedback_request(request,):
 	else:
 		form = NewFeedbackForm()
 	return render(request, 'share_feedback.html', context={"feedback_form":form})
+
+
