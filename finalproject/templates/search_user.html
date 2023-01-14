@@ -52,16 +52,15 @@
 		</div>
 		
 		<div style = "position:relative; left:80px; top:160px">
-			<div class="input-group">
-				<div class="form-outline">
-					<input type="search" id="form1" class="form-control" />
-					<label class="form-label" for="form1">Search User</label>
-				</div>
-			
-				<button type="button" class="btn btn-primary">
-					<i class="fas fa-search"></i>
+			<form method="POST">
+				{% csrf_token %}
+					<input name = "other-username" type="text" id="form1" class="form-control" />
+					<input name = "page-type" type="hidden" id="form2" value="search_page" />
+				<button type="submit" class="btn btn-primary">
+					Search User
+				
 				</button>
-			</div>
+			</form> 
 		</div>
 	</body>
 </html>
