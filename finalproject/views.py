@@ -2,7 +2,7 @@
 from projects.models import Project
 from django.shortcuts import  render, redirect
 from .forms import NewUserForm, NewFeedbackForm
-from .models import Profile
+from .models import Profile, Prediction
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
@@ -160,7 +160,6 @@ def searchuser_request(request,):
 	return render(request, 'search_user.html')
 
 def shareprediction_request(request,):
-	
 	stock_df = pd.read_sql('select distinct stock_name from stock_prices', DB_ENGINE)
 	stock_list = stock_df['stock_name'].to_list()
 	context = {
@@ -173,7 +172,9 @@ def shareprediction_request(request,):
 		"buy_price": data.get("buy-price"),
 		"sell_price": data.get("sell-price"),
 		"money_amount": data.get("money-amount"),
-		"profile" : Profile.objects.get(profile_name = request.user.username)}
+		"profile": Profile.objects.get(profile_name = request.user.username)}
+		prediction = Prediction(user = request.user.username, prediction_date = "2022-12-11", stock_name = prediction_info["selected_stock"], buy_price = prediction_info["buy_price"], sell_price = prediction_info["sell_price"], money_amount = prediction_info["money_amount"])
+		prediction.save()
 		calculate_score(prediction_info)
 		
 	return render(request, 'share_prediction.html', context)
@@ -183,7 +184,7 @@ def sharefeedback_request(request,):
 		form = NewFeedbackForm(request.POST)
 		if form.is_valid():
 			feedback = form.cleaned_data['feedback']
-			messages.info(request, f"Your feedback is sent.")
+			#messages.info(request, f"Your feedback is sent.")
 	else:
 		form = NewFeedbackForm()
 	return render(request, 'share_feedback.html', context={"feedback_form":form})
