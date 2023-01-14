@@ -1,12 +1,12 @@
 
 from projects.models import Project
 from django.shortcuts import  render, redirect
-from .forms import NewUserForm
+from .forms import NewUserForm, NewFeedbackForm
 from .models import Profile
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import AuthenticationForm 
+from django.contrib.auth.forms import AuthenticationForm
 import pandas as pd
 from .config import DB_ENGINE
 
@@ -44,6 +44,9 @@ def login_request(request):
 	form = AuthenticationForm()
 	return render(request=request, template_name="login.html", context={"login_form":form})
 
+def userprofile_request(request,):
+	return render(request, 'user_profile.html')
+
 def scoreboard_request(request,):
 	user_profiles = Profile.objects.all()
 	profile_list = []
@@ -55,8 +58,8 @@ def scoreboard_request(request,):
 	#context = {'profile': profile}
 	return render(request, 'scoreboard.html', context)
 
-def userprofile_request(request,):
-	return render(request, 'user_profile.html')
+def searchuser_request(request,):
+	return render(request, 'search_user.html')
 
 def shareprediction_request(request,):
 	stock_df = pd.read_sql('select distinct stock_name from stock_prices', DB_ENGINE)
@@ -66,4 +69,12 @@ def shareprediction_request(request,):
 	}
 	return render(request, 'share_prediction.html', context)
 
-
+def sharefeedback_request(request,):
+	if request.method == "POST":
+		form = NewFeedbackForm(request.POST)
+		if form.is_valid():
+			feedback = form.cleaned_data['feedback']
+			messages.info(request, f"Your feedback is sent.")
+	else:
+		form = NewFeedbackForm()
+	return render(request, 'share_feedback.html', context={"feedback_form":form})
