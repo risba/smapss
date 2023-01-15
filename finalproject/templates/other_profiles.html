@@ -127,6 +127,7 @@
 				  <th>Buy Price</th>
 				  <th>Sell Price</th>
 				</tr>
+				{% for prediction in predictions %}
 				<tr>
 					<td>{{prediction.prediction_date}}</td>
 					<td>{{prediction.stock_name}}</td>
@@ -134,6 +135,7 @@
 					<td>{{prediction.buy_price}}</td>
 					<td>{{prediction.sell_price}}</td>
 				  </tr>
+				  {% endfor %}
 			  </table>
 			  
 			  <h2>Followed Users</h2>
