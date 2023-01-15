@@ -55,20 +55,22 @@ def calculate_score(request):
     if prediction_restricted == 0:
         for i in range(len(stock_low)):
             if stock_low[i] <= buy_price:
-                stock_bought = int(math.floor(money_amount / buy_price))
                 stock_bought_ok = 1
+                #stock_bought = int(math.floor(money_amount / buy_price))
+                stock_bought = money_amount / buy_price
                 user_score = user_score - (stock_bought * buy_price)
                 break
         
         for i in range(len(stock_high)):
             if stock_bought_ok == 1:
                 if stock_high[i] >= sell_price:
-                    stock_sold = stock_bought
                     stock_sold_ok = 1
+                    stock_sold = stock_bought
                     user_score = user_score + (stock_sold * sell_price)
                     break
-                else:
-                    user_score = user_score + (stock_sold * stock_close[len(stock_high)-1])
+        
+        if stock_bought_ok == 1 and stock_sold_ok == 0:
+            user_score = user_score + (stock_bought * stock_close[len(stock_close)-1])
     
     user_score = float("{:.2f}".format(user_score))
 
