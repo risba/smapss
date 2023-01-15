@@ -197,6 +197,11 @@ def shareprediction_request(request,):
 
 def sharefeedback_request(request,):
 	if request.method == "POST":
+		feedback_db = request.POST.get('feedback')
+		user_db = request.user.username
+		df_to_insert = pd.DataFrame([[user_db,feedback_db]], columns=["user", "feedback"])
+		print(df_to_insert)
+		df_to_insert.to_sql('feedback_table', DB_ENGINE, if_exists='append')
 		form = NewFeedbackForm(request.POST)
 		if form.is_valid():
 			feedback = form.cleaned_data['feedback']
