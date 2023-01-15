@@ -1,3 +1,3 @@
 from sqlalchemy import create_engine
-DB_URL = 'postgresql://kubxndksaqwkzn:b946a1fb79f8103768009eb146dbc5c67acf2ab9a67534a1d0d33252f0d2daf6@ec2-34-231-63-30.compute-1.amazonaws.com:5432/d9nbe338h1pj2m'
+DB_URL = 'postgres://sdbzvxegowxftb:1dc5433255ead59faed22eb2544fb84008f9c0067e4e2fac6e4c28fa290ade93@ec2-107-23-76-12.compute-1.amazonaws.com:5432/dehmh5f8fepnth'
 DB_ENGINE = create_engine(DB_URL)
