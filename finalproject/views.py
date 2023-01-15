@@ -89,84 +89,87 @@ def searchuser_request(request,):
 	if request.method == "POST":
 		data=request.POST
 		page_type = data.get("page-type")
-		profile = Profile.objects.get(profile_name = data.get("other-username"))
-		follow_select_query = '''
-			select * from follow_table where follower = '{follower}' and followed='{followed}'
-			'''
-		follow_df = pd.read_sql(follow_select_query.format(follower = request.user.username, followed=profile.profile_name), 
-				DB_ENGINE)
-		if follow_df.empty:
-			last_operation = "Unfollow"
-		else:
-			last_operation = follow_df["isfollow"].iloc[-1]
-		if page_type =="search_page":
-			if last_operation == "Follow":
-				follow_type = "Unfollow"
+		profile = Profile.objects.filter(profile_name = data.get("other-username")).first()
+		if profile:
+			follow_select_query = '''
+				select * from follow_table where follower = '{follower}' and followed='{followed}'
+				'''
+			follow_df = pd.read_sql(follow_select_query.format(follower = request.user.username, followed=profile.profile_name), 
+					DB_ENGINE)
+			if follow_df.empty:
+				last_operation = "Unfollow"
 			else:
-				follow_type = "Follow"
+				last_operation = follow_df["isfollow"].iloc[-1]
+			if page_type =="search_page":
+				if last_operation == "Follow":
+					follow_type = "Unfollow"
+				else:
+					follow_type = "Follow"
 
 
-			followed_query = "select * from follow_table where follower = '{follower}'"
-			followed_df = pd.read_sql(followed_query.format(follower = profile.profile_name), DB_ENGINE)
-			followed_df = followed_df.drop_duplicates(['follower', 'followed'], keep = 'last')
-			followed_list = followed_df[followed_df['isfollow']=="Follow"]["followed"].tolist()
-			followed_profiles = Profile.objects.filter(profile_name__in=followed_list)
+				followed_query = "select * from follow_table where follower = '{follower}'"
+				followed_df = pd.read_sql(followed_query.format(follower = profile.profile_name), DB_ENGINE)
+				followed_df = followed_df.drop_duplicates(['follower', 'followed'], keep = 'last')
+				followed_list = followed_df[followed_df['isfollow']=="Follow"]["followed"].tolist()
+				followed_profiles = Profile.objects.filter(profile_name__in=followed_list)
 
-			follower_query = "select * from follow_table where followed = '{followed}'"
-			follower_df = pd.read_sql(follower_query.format(followed = profile.profile_name), DB_ENGINE)
-			follower_df = follower_df.drop_duplicates(['follower', 'followed'], keep = 'last')
-			follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
-	
+				follower_query = "select * from follow_table where followed = '{followed}'"
+				follower_df = pd.read_sql(follower_query.format(followed = profile.profile_name), DB_ENGINE)
+				follower_df = follower_df.drop_duplicates(['follower', 'followed'], keep = 'last')
+				follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
+		
 
-			predictions = Prediction.objects.filter(user = profile.profile_name)
+				predictions = Prediction.objects.filter(user = profile.profile_name)
 
 
-			user_info = {
+				user_info = {
+					"profile_name": profile.profile_name,
+					"score": profile.score,
+					"follow": follow_type,
+					"followed_profiles": followed_profiles,
+					"follower_count": len(follower_list),
+					"predictions": predictions}
+
+
+				return render(request, 'other_profiles.html', context=user_info)
+		
+		
+			elif page_type == "follow_page":
+				if last_operation == "Follow":
+					insert_operation = "Unfollow"
+				else:
+					insert_operation = "Follow"
+				follow_db_list = ['2022-12-11', request.user.username, profile.profile_name, insert_operation]
+				follow_db_df = pd.DataFrame([follow_db_list], columns=["create_date", "follower", "followed","isfollow"])
+				follow_db_df.to_sql('follow_table', DB_ENGINE, if_exists='append')
+				follow_type = last_operation
+
+
+				followed_query = "select * from follow_table where follower = '{follower}'"
+				followed_df = pd.read_sql(followed_query.format(follower = profile.profile_name), DB_ENGINE)
+				followed_df = followed_df.drop_duplicates(['follower', 'followed'], keep = 'last')
+				followed_list = followed_df[followed_df['isfollow']=="Follow"]["followed"].tolist()
+				followed_profiles = Profile.objects.filter(profile_name__in=followed_list)
+
+
+				follower_query = "select * from follow_table where followed = '{followed}'"
+				follower_df = pd.read_sql(follower_query.format(followed = profile.profile_name), DB_ENGINE)
+				follower_df = follower_df.drop_duplicates(['follower', 'followed'], keep = 'last')
+				follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
+
+				predictions = Prediction.objects.filter(user = profile.profile_name)
+
+				user_info = {
 				"profile_name": profile.profile_name,
 				"score": profile.score,
 				"follow": follow_type,
 				"followed_profiles": followed_profiles,
 				"follower_count": len(follower_list),
 				"predictions": predictions}
-
-
-			return render(request, 'other_profiles.html', context=user_info)
-		
-		elif page_type == "follow_page":
-			if last_operation == "Follow":
-				insert_operation = "Unfollow"
-			else:
-				insert_operation = "Follow"
-			follow_db_list = ['2022-12-11', request.user.username, profile.profile_name, insert_operation]
-			follow_db_df = pd.DataFrame([follow_db_list], columns=["create_date", "follower", "followed","isfollow"])
-			follow_db_df.to_sql('follow_table', DB_ENGINE, if_exists='append')
-			follow_type = last_operation
-
-
-			followed_query = "select * from follow_table where follower = '{follower}'"
-			followed_df = pd.read_sql(followed_query.format(follower = profile.profile_name), DB_ENGINE)
-			followed_df = followed_df.drop_duplicates(['follower', 'followed'], keep = 'last')
-			followed_list = followed_df[followed_df['isfollow']=="Follow"]["followed"].tolist()
-			followed_profiles = Profile.objects.filter(profile_name__in=followed_list)
-
-
-			follower_query = "select * from follow_table where followed = '{followed}'"
-			follower_df = pd.read_sql(follower_query.format(followed = profile.profile_name), DB_ENGINE)
-			follower_df = follower_df.drop_duplicates(['follower', 'followed'], keep = 'last')
-			follower_list = follower_df[follower_df['isfollow']=="Follow"]["follower"].tolist()
-
-			predictions = Prediction.objects.filter(user = profile.profile_name)
-
-			user_info = {
-			"profile_name": profile.profile_name,
-			"score": profile.score,
-			"follow": follow_type,
-			"followed_profiles": followed_profiles,
-			"follower_count": len(follower_list),
-			"predictions": predictions}
-			print(follow_df)
-			return render(request, 'other_profiles.html', context=user_info)
-
+				print(follow_df)
+				return render(request, 'other_profiles.html', context=user_info)
+		else:
+			print("This profile does not exist")
 	return render(request, 'search_user.html')
 
 def shareprediction_request(request,):
@@ -184,8 +187,11 @@ def shareprediction_request(request,):
 		"money_amount": data.get("money-amount"),
 		"profile": Profile.objects.get(profile_name = request.user.username)}
 		prediction = Prediction(user = request.user.username, prediction_date = "2022-12-11", stock_name = prediction_info["selected_stock"], buy_price = prediction_info["buy_price"], sell_price = prediction_info["sell_price"], money_amount = prediction_info["money_amount"])
-		prediction.save()
-		calculate_score(prediction_info)
+		if prediction_info["buy_price"] != "" and prediction_info["sell_price"] != "" and prediction_info["money_amount"] != "":
+			prediction.save()
+			calculate_score(prediction_info)
+		else:
+			print("fields have null values")
 		
 	return render(request, 'share_prediction.html', context)
 
